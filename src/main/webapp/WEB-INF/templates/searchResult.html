@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org" 
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+        layout:decorate="~{layouts/default}">
+    <head>
+        <title>Book Share</title>
+        <link rel="stylesheet" th:href="@{/public/css/book-image-animate.css}">
+        <link rel="stylesheet" th:href="@{/public/css/animate.css}">
+        <style type="text/css">
+            body {
+                background-color: #F8F9FA;
+            }
+
+        </style>
+    </head>
+    <body>
+        <th:block layout:fragment="header" th:include="layouts/header :: headerFragment">
+        </th:block>
+        <div layout:fragment="content" class="container">
+            <div class="col-lg-9 col-md-12">
+                <div class="container">
+                    <div class="container">
+                        <p>
+                            <span>Kết quả tìm kiếm&ensp;</span>
+                            <span>&ldquo;</span>
+                            <strong><span th:text="${searchKey}"></span></strong>
+                            <span>&rdquo;</span>
+                        </p>
+                    </div>
+                    <div id="itemOrderToolBar" class="container d-flex flex-row align-items-center" style="background-color: white;">
+                        <div class="p-2 bd-highlight ">
+                            <span class="p-2">Sắp xếp theo</span> 
+                        </div>
+                        <div class="p-2 bd-highlight">
+                            <a th:classappend="${orderBy == 'view'} ? 'btn-success' : 'btn-secondary'" class="btn" type="button" th:href="@{/results?search_key=} + ${searchKey} + '&page=1&orderBy=view'">Lượt Xem</a>
+                        </div>
+                        <div class="p-2 bd-highlight">
+                            <a th:classappend="${orderBy == 'created_date'} ? 'btn-success' : 'btn-secondary'" class="btn" type="button" th:href="@{/results?search_key=} + ${searchKey} + '&page=1&orderBy=created_date'">Ngày Đăng</a>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="row mt-2" th:each="book : ${bookList}">
+                            <div class="col-md-3 d-flex mb-1">
+                                <a th:href="@{/book/} + ${book.bookId} + '/info'" style="text-transform:none; text-decoration: none;">
+                                    <img class="img-fluid lazy border" th:data-src="@{/public/} + ${book.thumbnailUrl}" th:alt="${book.bookName}" style="width: 200px;">
+                                </a>
+                            </div>
+                            <div class="col-md-9">
+                                <a th:href="@{/book/} + ${book.bookId} + '/info'" style="text-transform:none; text-decoration: none;">
+                                    <h4>
+                                        <small th:text="${book.bookName}"></small>
+                                    </h4>
+                                </a>
+                                <p style="color: gray;">
+                                    <span th:text="${book.author}"></span>
+                                    <span>&bull;</span>
+                                    <span th:text="${book.bookView + ' lượt xem'}"></span>
+                                    <span>&bull;</span>
+                                    <span th:text="${book.meaningfulPostDate}"></span>
+                                </p>
+                                <p th:text="${#strings.substring(book., 0, 99)} " style="color: gray;">
+                                    
+                                </p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9 d-flex justify-content-center mt-2">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li th:classappend= "${currentPageNum == 1} ? 'disabled'" class="page-item ">
+                            <a class="page-link" th:href="@{/results?search_key=} + ${searchKey} + '&page=1&orderBy=' + ${orderBy}">Đầu</a>
+                        </li>
+                        <li th:classappend= "${currentPageNum == 1} ? 'disabled'" class="page-item">
+                            <a class="page-link" th:href="@{/results?search_key=} + ${searchKey} + '&page=' + ${currentPageNum - 1} +'&orderBy=' + ${orderBy}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li th:each="i: ${#numbers.sequence(beginPageNum, endPageNum)}" th:classappend= "${i == currentPageNum} ? 'active'" class="page-item">
+                            <a class="page-link" th:href="@{/results?search_key=} + ${searchKey} + '&page=' + ${i} +'&orderBy=' + ${orderBy}" th:text="${i}"></a>
+                        </li>
+                        <li th:classappend= "${currentPageNum == amountOfPages} ? 'disabled'" class="page-item">
+                            <a class="page-link" th:href="@{/results?search_key=} + ${searchKey} + '&page=' + ${currentPageNum + 1} +'&orderBy=' + ${orderBy}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        <li th:classappend= "${currentPageNum == amountOfPages} ? 'disabled'" class="page-item">
+                            <a class="page-link" th:href="@{/results?search_key=} + ${searchKey} + '&page=' + ${amountOfPages} + '&orderBy=' + ${orderBy}">Cuối</a>
+                        </li>
+
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </body>
+    <th:block layout:fragment="scripts">
+    <script th:src="@{/public/js/ImageLazyLoad.js}"></script>
+    </th:block>
+</html>

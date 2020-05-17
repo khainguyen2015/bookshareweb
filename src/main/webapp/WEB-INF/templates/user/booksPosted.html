@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+		layout:decorate="~{layouts/default}">
+<head>
+    <link rel="stylesheet" th:href="@{/public/css/my-sidebar.css}">
+    <!-- <link rel="stylesheet" th:href="@{/public/css/success-modal.css}"> -->
+</head>
+<body>
+	<th:block layout:fragment="header" th:include="layouts/header :: headerFragment">
+	</th:block>
+	<div layout:fragment="content" class="container" style="margin-top: 100px">
+    <div class="container">
+     <th:block layout:fragment="successModal" th:include="layouts/successModal :: successModalFragment" th:with="modalMessage='Xóa Sách Thành Công!'">
+      </th:block>
+      <div class="row profile">
+        <div class="col-md-3">
+            <th:block layout:fragment="sidebar" th:include="layouts/userSidebar :: userSidebarFragment" th:with="currentPage='booksPosted'">
+            </th:block>
+        </div>
+        <div class="col-md-9">
+          <div class="profile-content border">
+            <div class="container">
+              <h5>Sách Đã Đăng</h5>
+            </div>
+            <div id="itemOrderToolBar" class="container d-flex flex-row align-items-center bg-light p-2">
+              <div class="container d-flex flex-row">
+                <span class="p-2">Sắp xếp theo</span> 
+                <a th:classappend="${orderBy == 'view' || orderBy == null} ? 'btn-success' : 'btn-secondary'" class="btn mr-2" type="button" th:href="@{/user/book-posted/1?orderBy=view}">Lượt Xem</a>
+                <a th:classappend="${orderBy == 'created_date'} ? 'btn-success' : 'btn-secondary'" class="btn mr-2" type="button" th:href="@{/user/book-posted/1?orderBy=created_date}">Ngày Đăng</a>
+              </div>
+              <div class="container d-flex flex-row align-items-center justify-content-end">
+                <form id="booksPostedSearch" th:action="@{/user/book-posted/results}" class="form d-flex flex-row" role="form" autocomplete="off">
+                  <div class="input-group">
+                    <input autocomplete="off"class="form-control" type="text" placeholder="Tìm sách theo tên" name="search_key">
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-secondary" type="submit">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <hr>
+            <div class="container">
+              <div class="row mt-2" th:each="book,iter : ${books}">
+                <div class="col-md-3 d-flex">
+                  <a th:href="@{/book/} + ${book.bookId} + '/info'" style="text-transform:none; text-decoration: none;">
+                    <img class="img-fluid lazy border" th:data-src="@{/public/} + ${book.thumbnailUrl}" th:alt="${book.bookName}" style="width: 200px;">
+                  </a>
+                </div>
+                <div class="col-md-9">
+                  <a th:href="@{/book/} + ${book.bookId} + '/info'" style="text-transform:none; text-decoration: none;">
+                    <h4>
+                      <small th:text="${book.bookName}"></small>
+                    </h4>
+                  </a>
+                  <p style="color: gray;">
+                    <span th:text="${book.author}"></span>
+                    <span>&bull;</span>
+                    <span th:text="${book.bookView + ' lượt xem'}"></span>
+                    <span>&bull;</span>
+                    <span th:text="${book.meaningfulPostDate}"></span>
+                  </p>
+                  <a th:href="@{/book/update-book?_id=} + ${book.bookId}" class="btn btn-info" >Cập nhật</a>
+                  <button type="button" class="btn btn-danger" data-toggle="modal" th:attr="data-target='#deleteModal_' + ${iter.index}">
+                    Xóa
+                  </button>
+                  <div class="modal fade" th:id="'deleteModal_' + ${iter.index}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h4 class="modal-title">Xóa Sách Đã Đăng</h4>
+                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                          Bạn có chắc là muốn xóa ?
+                        </div>
+                        <div class="modal-footer">
+                          <a class="btn btn-danger" th:href="@{/book/delete-book?_id=} + ${book.bookId}">Xóa</a>
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-2 d-flex justify-content-center">
+              <nav aria-label="Page navigation example">
+                  <ul class="pagination">
+                      <li th:classappend= "${currentPageNum == 1} ? 'disabled'" class="page-item ">
+                          <a class="page-link" th:href="@{/user/book-posted/1} + (${orderBy} ? '?orderBy=' + ${orderBy} : '')">Đầu</a>
+                      </li>
+                      <li th:classappend= "${currentPageNum == 1} ? 'disabled'" class="page-item">
+                          <a class="page-link" th:href="@{/user/book-posted/} + ${currentPageNum - 1} + (${orderBy} ? '?orderBy=' + ${orderBy} : '')" aria-label="Previous">
+                              <span aria-hidden="true">&laquo;</span>
+                          </a>
+                      </li>
+                      <li th:each="i: ${#numbers.sequence(beginPageNum, endPageNum)}" th:classappend= "${i == currentPageNum} ? 'active'" class="page-item">
+                          <a class="page-link" th:href="@{/user/book-posted/} + ${i} + (${orderBy} ? '?orderBy=' + ${orderBy} : '')" th:text="${i}"></a>
+                      </li>
+                      <li th:classappend= "${currentPageNum == amountOfPages} ? 'disabled'" class="page-item">
+                          <a class="page-link" th:href="@{/user/book-posted/} + ${currentPageNum + 1} + (${orderBy} ? '?orderBy=' + ${orderBy} : '')" aria-label="Next">
+                              <span aria-hidden="true">&raquo;</span>
+                          </a>
+                      </li>
+                      <li th:classappend= "${currentPageNum == amountOfPages} ? 'disabled'" class="page-item">
+                          <a class="page-link" th:href="@{/user/book-posted/} + ${amountOfPages} + (${orderBy} ? '?orderBy=' + ${orderBy} : '')">Cuối</a>
+                      </li>
+
+                  </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+	</div>
+</body>
+<th:block layout:fragment="scripts">
+<script type="text/javascript">
+  window.onload = function() {
+    $("#ignismyModal").modal('show');
+  }
+
+  function booksPostedSearch(searchKey) {
+    window.location.href = ""
+  }
+</script>
+<script th:src="@{/public/js/ImageLazyLoad.js}"></script>
+</th:block>
+</html>

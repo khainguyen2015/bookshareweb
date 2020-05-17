@@ -1,0 +1,13 @@
+<div th:fragment="messageFragment">
+	<div th:if="${successMessages != null}" class="alert alert-success">
+	    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+	    <span th:text="${successMessages}"></span>
+	</div>
+
+	<div th:if="${errorMessages != null}" class="alert alert-danger">
+	    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+	    <span th:text="${errorMessages}"></span>
+	</div>
+</div>
+
+

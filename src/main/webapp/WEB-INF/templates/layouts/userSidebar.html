@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title></title>
+</head>
+<body>
+    <div th:fragment="userSidebarFragment" class="profile-sidebar">
+        <div class="profile-userpic d-flex justify-content-center">
+            <img th:src="@{/public/} + ${user.avatarUrl}" class="img-responsive" alt="">
+        </div>
+        <div class="profile-usertitle">
+            <div class="profile-usertitle-name">
+                <span th:text="${user.userName}"></span>
+            </div>
+            <div class="profile-usertitle-job">
+                <div sec:authorize="hasRole('ADMIN')">Quản trị viên</div>
+                <div sec:authorize="hasRole('USER')">Thành viên</div>
+            </div>
+        </div>
+        <div class="profile-usermenu">
+            <ul class="nav flex-column">
+                <li class="d-flex" th:classappend="${currentPage == 'profile'} ? 'active'">
+                    <a class="w-100 " th:href="@{/user/account/profile}" >
+                        <i class="glyphicon glyphicon-home"></i>
+                        Thông Tin Cá Nhân
+                    </a>
+                </li>
+                <li class="d-flex" th:classappend="${currentPage == 'booksPosted'} ? 'active'">
+                    <a class="w-100" th:href="@{/user/book-posted}" >
+                        <i class="glyphicon glyphicon-ok"></i>
+                        Sách Đã Đăng 
+                    </a>
+                </li>
+                <li sec:authorize="hasRole('ADMIN')" class="d-flex" th:classappend="${currentPage == 'bookApproval'} ? 'active'">
+                    <a class="w-100" th:href="@{/admin/book-approval}" >
+                        <i class="glyphicon glyphicon-ok"></i>
+                        Sách Đang Chờ Duyệt
+                    </a>
+                </li>
+                <li class="d-flex" th:classappend="${currentPage == 'changePassword'} ? 'active'">
+                    <a class="w-100" th:href="@{/user/account/change-password}">
+                        <i class="glyphicon glyphicon-user"></i>
+                        Đổi Mật Khẩu 
+                    </a>
+                </li>
+                <li class="d-flex" th:classappend="${currentPage == '???'} ? 'active'">
+                    <a class="w-100" href="#">
+                        <i class="glyphicon glyphicon-flag"></i>
+                        Help 
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

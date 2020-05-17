@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org" 
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+        layout:decorate="~{layouts/default}">
+    <head>
+        <title>Book Share</title>
+        <link rel="stylesheet" th:href="@{/public/css/book-image-animate.css}">
+        <link rel="stylesheet" th:href="@{/public/css/animate.css}">
+        <style type="text/css">
+            body {
+                background-color: #F8F9FA;
+            }
+        </style>
+    </head>
+    <body>
+        <th:block layout:fragment="header" th:include="layouts/header :: headerFragment">
+        </th:block>
+        <div layout:fragment="content" class="container">
+            <div class="d-flex flex-row mb-3 flex-wrap justify-content-center justify-content-md-start" th:if="${not #lists.isEmpty(bookList)}">
+                <div class="p-2" th:each="book : ${bookList}">
+                    <a id="animationLink" th:href="@{/book/} + ${book.bookId} + '/info'" style="text-transform:none; text-decoration: none;">
+                        <div class="container pb-20" style="width:200px; height: 90%">
+                            <div class="p-2 mt-4">
+                                <img id="animationImage" class="img-fluid lazy" th:data-src="@{/public/} + ${book.thumbnailUrl}" th:alt="${book.bookName}" style="width:100%; height: 210px; padding-bottom: 10px;">
+  
+                            </div>
+                            <div class="p-2">
+                                <h4><small th:text="${book.bookName}"></small></h4>
+                                <p style="color: black;">Author: <span th:text="${book.author}"></span></p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li th:classappend= "${currentPageNum == 1} ? 'disabled'" class="page-item ">
+                            <a class="page-link" th:href="@{/}">Đầu</a>
+                        </li>
+                        <li th:classappend= "${currentPageNum == 1} ? 'disabled'" class="page-item">
+                            <a class="page-link" th:href="@{/} + ${currentPageNum - 1}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li th:each="i: ${#numbers.sequence(beginPageNum, endPageNum)}" th:classappend= "${i == currentPageNum} ? 'active'" class="page-item">
+                            <a class="page-link" th:href="@{/} + ${i}" th:text="${i}"></a>
+                        </li>
+                        <li th:classappend= "${currentPageNum == amountOfPages} ? 'disabled'" class="page-item">
+                            <a class="page-link" th:href="@{/} + ${currentPageNum + 1}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        <li th:classappend= "${currentPageNum == amountOfPages} ? 'disabled'" class="page-item">
+                            <a class="page-link" th:href="@{/} + ${amountOfPages}">Cuối</a>
+                        </li>
+
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </body>
+    <th:block layout:fragment="scripts">
+    <script th:src="@{/public/js/ImageLazyLoad.js}"></script>
+    </th:block>
+</html>

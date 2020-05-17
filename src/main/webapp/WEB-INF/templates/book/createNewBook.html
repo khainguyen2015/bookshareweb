@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+        layout:decorate="~{layouts/default}">
+<head>
+	<title></title>
+    <link rel="stylesheet" th:href="@{/public/css/success-modal.css}">
+    <link rel="stylesheet" th:href="@{/public/css/create-new-book.css}">
+</head>
+<body>
+	<th:block layout:fragment="header" th:include="layouts/header :: headerFragment">
+	</th:block>
+	<div layout:fragment="content" class="container" style="margin-top: 100px">
+       	<th:block layout:fragment="successModal" th:include="layouts/successModal :: successModalFragment" th:with="modalMessage='Sách Đã Được Thêm!'">
+        </th:block>
+		<form th:action="@{/book/create-new-book}" class="form" th:object="${addBookDto}" role="form" autocomplete="off" id="formAddNewBook" method="POST" enctype="multipart/form-data">
+		<a th:href="@{/user/account/profile}">Trang chủ</a>
+    	<span>></span>
+    	<a th:href="@{/user/add-new-book}">Thêm sách mới</a>
+        <div class="container addNewBook shadow-sm">
+			<div class="row">
+			    <div class="col-md-10 col-md-offset-2">
+			    	<div class="container">
+				    	<h4 style="margin-top: 20px; margin-bottom: 20px">Thông Tin Cơ Bản</h4>
+			    	</div>
+	    		    <div class="form-group">
+	    		    	<input th:if="*{bookId != 0}" th:field="*{bookId}" id="bookId" type="hidden" class="form-control"/>
+	    		        <div class="row">
+	    		        	<label class="col-md-2" for="bookName"><span class="require float-md-right">*Tên Sách</span></label>
+	    		        	<div class="col-md-10">
+		    		        	<input th:classappend="${#fields.hasErrors('bookName')} ? 'is-invalid'" th:field="*{bookName}" id="bookName" type="text" class="form-control" name="bookName" required/>
+		    		        	<span th:each="error : ${#fields.errors('bookName')}" class="help-block text-danger" th:text="${error}"></span>
+		    		    	</div>
+	    		        </div>
+	    		    </div>
+	    		    <div  class="form-group">
+	    		    	<div class="row">
+		    		        <label class="col-md-2" for="authorName"><span class="require float-md-right">*Tên tác giả</span></label>
+		    		        <div class="col-md-10">
+			    		        <input th:classappend="${#fields.hasErrors('authorName')} ? 'is-invalid'" th:field="*{authorName}" id="authorName" type="text" class="form-control" name="authorName" required/>
+			    		        <span th:each="error : ${#fields.errors('authorName')}" class="help-block text-danger" th:text="${error}"></span>
+		    		    	</div>
+	    		    	</div>
+	    		    </div>
+	    		    <div class="form-group">
+	    		    	<div class="row">
+		    		        <label class="col-md-2" for="description"><span class="float-md-right">Mô tả sách</span></label>
+		    		        <div class="col-md-10">
+		    		        	<textarea th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'" th:field="*{description}" rows="5" class="form-control" name="description" ></textarea>
+		    		        	<span th:each="error : ${#fields.errors('description')}" class="help-block text-danger" th:text="${error}"></span>
+		    		        </div>
+	    		    	</div>
+	    		    </div>
+	    		    <div class="form-group">
+	    		        <div class="row">
+	    		        	<label class="col-md-2" for="inputGroupSelect01"><span class="require float-md-right">*Thể Loại</span></label>
+	    		        	<div class="col-md-8">
+								<select name="bookType" class="custom-select form-control" th:field="*{bookType}">
+									<option value="-1" disabled hidden>Chọn Thể Loại</option>
+							  		<option th:each="bookType : ${bookTypes}" th:value="${bookType.typeId}" th:text="${bookType.typeName}"></option>
+								</select>
+		    		        	<span th:each="error : ${#fields.errors('bookType')}" class="help-block error text-danger" th:text="${error}"></span>
+		    		    	</div>
+	    		        </div>
+	    		    </div>
+				</div>
+			</div>
+        </div>
+        <div class="container addNewBook shadow-sm">
+			<div class="row" style="margin-top: 20px">
+			    <div class="col-md-8 col-md-offset-2">
+			    	<div class="container">
+				    	<h4 style="margin-top: 20px; margin-bottom: 20px">Hình Ảnh</h4>
+			    	</div>
+
+	    		    <div class="form-group bookshare-upload">
+    		    		<div class="container">
+    		    			<div id="imageInput">
+						        <input id="bookUploadThumbnailImage" class="form-control upload-image" type="file" accept="image/x-png,image/jpeg" th:field="*{bookThumbnailImage}" data-index="null" data-previewimagezoneno="1" style="display: none;" >
+    		    			</div>
+						    <div class="container d-flex flex-row bd-highlight mb-3">
+				            	<div th:if="*{bookThumbnailImageUrl != null}">
+					            	<div class="container-fluid preview-images-zone-1">
+						        		<div class="container-fluid d-flex p-0 m-0 border" style="width: 130px; height: 150px">
+						        			<div class="container p-0 preview-image">
+		                    					<div class="container d-flex p-0 image-zone">
+					        						<img th:src="@{/public/} + *{bookThumbnailImageUrl}">
+		                    					</div>
+		                    				</div>
+						        		</div>
+						        		<div class="d-flex justify-content-center align-items-center p-2">
+	    						        	<span class="require">*Ảnh bìa</span>
+			    		        		</div>
+	    		        			</div>
+				            	</div>
+					            <div th:if="*{bookThumbnailImageUrl == null}">
+					        		<div th:classappend="${#fields.hasErrors('bookThumbnailImage')} ? 'border-danger'" class="container-fluid preview-images-zone-1">
+					        			<div class="container-fluid d-flex p-0 m-0 border" style="width: 130px; height: 150px">
+						        			<a class="upload-image" data-no="1" href="javascript:void(0)" onclick="$('#bookUploadThumbnailImage').click()" style="width: 100%; height: 100%; text-decoration-line: none">
+						        				<div class="container h-100 d-flex justify-content-center align-items-center">
+						        					<i class="fa fa-plus" aria-hidden="true"></i>
+						        				</div>
+					        				</a>
+				        				</div>
+				        				<div class="d-flex justify-content-center align-items-center p-2">
+		    						        <span class="require">*Ảnh bìa</span>
+					    		        	<span th:each="errors : ${#fields.errors('bookThumbnailImage')}" class="help-block text-danger">
+				    		        			<span th:text="${errors}"></span>
+				    		        		</span>
+				        				</div>
+					        		</div>
+					            </div>
+					            <div th:each="bookImage, itemStat : *{bookImages}">
+					            	<div th:if="${bookImage.imageURL == null}">
+    							        <input th:id="${'bookAddImage-' + itemStat.index}" class="form-control upload-image" type="file" accept="image/x-png,image/jpeg" th:field="*{bookImagesMultipartFile}" th:attr="data-previewimagezoneno=${itemStat.index + 2},data-index=${itemStat.index}" style="display: none;">
+	    					            <div th:classappend="${'preview-images-zone-' + (itemStat.index + 2)}" class="container-fluid">
+							        		<div class="container-fluid d-flex p-0 m-0 border" style="width: 130px; height: 150px">
+							        			<a class="upload-image" href="javascript:void(0)"  th:attr="onclick=|$('#bookAddImage-${itemStat.index}').click()|" style="width: 100%; height: 100%; text-decoration-line: none">
+							        				<div class="container h-100 d-flex justify-content-center align-items-center">
+							        					<i class="fa fa-plus" aria-hidden="true"></i>
+							        				</div>
+						        				</a>
+							        		</div>
+							        		<div class="d-flex justify-content-center align-items-center p-2">
+		    						        	<span><small th:text="${'Image ' + (itemStat.index + 1)}"></small></span>
+				    		        		</div>
+						            	</div>
+					            	</div>
+					            	<div th:if="${bookImage.imageURL != null}">
+						            	<div th:classappend="${'preview-images-zone-' + (itemStat.index + 2)}" class="container-fluid">
+							        		<div class="container-fluid d-flex p-0 m-0 border" style="width: 130px; height: 150px">
+							        			<div class="container p-0 preview-image">
+			                    					<div class="container d-flex p-0 image-zone">
+						        						<img th:src="@{/public/} + ${bookImage.imageURL}">
+			                    					</div>
+			                    				</div>
+							        		</div>
+							        		<div class="d-flex justify-content-center align-items-center p-2">
+		    						        	<span><small th:text="${'Image ' + (itemStat.index + 1)}"></small></span>
+				    		        		</div>
+		    		        			</div>
+					            	</div>
+					            </div>
+						    </div>
+						</div>
+	    		    </div>
+				</div>
+			</div>
+        </div>
+        <div class="container addNewBook shadow-sm">
+			<div class="row" style="margin-top: 20px">
+			    <div class="col-md-8 col-md-offset-2">
+			    	<div class="container">
+				    	<h4 style="margin-top: 20px; margin-bottom: 20px">Link Download Sách</h4>
+			    	</div>
+	    		   	<div th:each="downloadLink, itemStat : *{bookDownloadLinks}" class="form-group">
+	    		        <div class="row">
+	    		        	<label class="col-md-2" for="tempBookDownloadLink">
+	    		        		<span class="require float-md-right" th:text="${(itemStat.index == 0 ? '*Link ' : 'Link ') + (itemStat.index + 1)}">
+	    		        		</span>
+	    		        	</label>
+	    		        	<div class="col-md-10">
+		    		        	<input th:classappend="${downloadLinkErrors != null && downloadLinkErrors[__${itemStat.index}__] != null} ? 'is-invalid'" th:field="*{bookDownloadLinks[__${itemStat.index}__].link}" id="tempBookDownloadLink" type="text" class="form-control"/>
+		    		        	<span th:if="${downloadLinkErrors != null && downloadLinkErrors[__${itemStat.index}__] != null}" class="help-block text-danger">
+		    		        		<span th:text="#{${downloadLinkErrors[__${itemStat.index}__]}}"></span>
+		    		        	</span>
+		    		    	</div>
+	    		        </div>
+	    		    </div>
+				</div>
+			</div>
+        </div>
+
+	    <div class="form-group container" style="margin-top: 30px;">
+	    	<div class="row">
+	    		<div class="">
+    		        <button type="submit" class="btn btn-primary">
+	            		Lưu
+    		        </button>
+    		        <button class="btn btn-danger">
+    		            Hủy
+    		        </button>
+	    		</div>
+	    	</div>
+	    </div>
+        </form>
+	</div>
+</body>
+<th:block layout:fragment="scripts">
+<script type="text/javascript">
+
+
+	$(document).ready(function() {
+	    var elements = document.getElementsByClassName("upload-image");
+	    for (var i = 0; i < elements.length; i++) {
+		    elements[i].addEventListener('change', readImage, false);
+		}
+
+	    $(document).on('click', '.image-cancel', function() {
+    		const imageZoneNo = $(this).data('previewimagezoneno');
+			const index = $(this).data('index');
+	        const output = $(".preview-images-zone-" + imageZoneNo);
+	        document.getElementById('bookCoverImage').value = "";
+	        output.empty();
+	        $("#bookAddImage-" + index).val="";
+	        var html = '<a class="upload-image" href="javascript:void(0)" onclick="$(\'#bookAddImage-' + index + '\').click()" style="width: 100%; height: 100%;'+
+				        'text-decoration-line: none">' + 
+					        '<div class="container h-100 d-flex justify-content-center align-items-center">'+
+								'<i class="fa fa-plus" aria-hidden="true"></i>'+
+							'</div>'+
+						'</a>';
+	        output.append(html);
+	    });
+	});
+
+	function readImage() {
+		const imageZoneNo = $(this).data('previewimagezoneno');
+		const index = $(this).data('index');
+		let htmlInputId = "";
+		console.log(imageZoneNo);
+	    if (window.File && window.FileList && window.FileReader) {
+	        var files = event.target.files; //FileList object
+	       
+            var file = files[0];
+            if (!file.type.match('image')) return;
+
+            var picReader = new FileReader();
+            picReader.addEventListener('load', function (event) {
+            	var output = $(".preview-images-zone-" + imageZoneNo);
+            	output.empty();
+                var picFile = event.target;
+                var html =  '<div class="container-fluid d-flex p-0 m-0 border" style="width: 130px; height: 150px">' +
+	                			'<div class="container p-0 preview-image" >' +
+		                            '<div class="container d-flex p-0 image-zone">' + 
+		                            	'<img src="' + picFile.result + '">' +
+	                            	'</div>' +
+                            	'</div>' +
+                            '</div>';
+    			if(index !== null) {
+    				htmlInputId = "bookAddImage-" + index;
+    				html +=
+                    	'<div class="d-flex justify-content-center align-items-center p-2">' +
+				        	'<span><small>Image ' + imageZoneNo + '</small></span>' +
+		        		'</div>' + 
+    					'<div class="d-flex justify-content-center align-items-center">'+
+		        			'<a class="btn btn-primary mr-2" href="javascript:void(0)" onclick="$(\'#' + htmlInputId + '\').click()">' +
+        						'<span>Sửa</span>' + 
+	        				'</a>' + 
+		        			'<a class="image-cancel btn btn-danger" data-previewimagezoneno=' + imageZoneNo + ' data-index=' + index + ' href="javascript:void(0)">' +
+        						'<span>Xóa</span>' +
+	        				'</a>' +
+		        		'</div>';
+	        	} else {
+	        		htmlInputId = "bookCoverImage";
+		        	html += 
+                        '<div class="d-flex justify-content-center align-items-center p-2">' +
+				        	'<span><small>Ảnh Bìa</small></span>' +
+		        		'</div>' + 
+		        		'<div class="d-flex justify-content-center align-items-center">'+
+		        			'<a class="btn btn-primary mr-2" href="javascript:void(0)" onclick="$(\'#' + htmlInputId + '\').click()">' +
+        						'<span>Sửa</span>' + 
+	        				'</a>' + 
+		        		'</div>';
+	        	}
+                output.append(html);
+            });
+            picReader.readAsDataURL(file);
+	    } else {
+	        console.log('Browser not support');
+	    }
+	}
+</script>
+</th:block>
+</html>

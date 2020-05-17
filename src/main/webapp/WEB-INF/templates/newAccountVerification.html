@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+		layout:decorate="~{layouts/default}">
+<head>
+	<title>Xác thực tài khoản mới</title>
+</head>
+<body>
+	<th:block layout:fragment="header" th:include="layouts/header :: headerFragment">
+	</th:block>
+	<div layout:fragment="content" class="container" style="margin-top: 100px">
+		<div th:if="${expired}" >
+			<p th:text="${message}"/>
+			<a th:href="${/resendRegistrationToken?token=} + ${token}" class="btn btn-primary btn-lg">Gửi lại mã xác thực</a>
+		</div>
+<!-- 		<div th:if="${verification}">
+			<p th:text="${message}"></p>
+			<p>
+				Chưa nhận được mã xác thực?
+				<a th:href="${/resendRegistrationToken?token=} + ${token}"> 
+					Gửi lại
+				</a>
+			</p>
+		</div> -->
+		<div th:if="${reVerification}">
+	        <div class="container">
+	            <div class="row">
+	                <div class="col-md-12 min-vh-100 d-flex flex-column justify-content-center">
+	                    <div class="row">
+	                        <div class="col-lg-6 col-md-8 mx-auto">
+	                            <!-- form card login -->
+	                            <div class="card rounded shadow shadow-sm">
+	                                <div class="card-header text-center">
+	                                    <h3 class="mb-0">Xác thực tài khoản</h3>
+	                                </div>
+	                                <div class="card-body">
+
+	                                    <th:block layout:fragment="messages" th:include="layouts/message :: messageFragment">
+	                                    </th:block>
+	                                    
+	                                    <form th:action="@{/verification_new_account}" class="form" role="form" autocomplete="off" id="formResetPassword" method="POST">
+	                                        <div class="form-group">
+	                                            <label for="email" class="control-label">Nhập email đã dùng để đăng kí tài khoản</label>
+	                                            <input id="email" type="email" class="form-control" name="email" 
+	                                                value="" required autofocus>                             
+	                                        </div>
+	                                        <button type="submit" class="btn btn-primary btn-lg" id="btnLogin">Send email</button>
+	                                    </form>
+	                                </div>
+	                                <!--/card-block-->
+	                            </div>
+	                            <!-- /form card login -->
+	                        </div>
+	                    </div>
+	                    <!--/row-->
+	                </div>
+	            <!--/col-->
+	            </div>
+        	<!--/row-->
+        	</div>
+		</div>
+	</div>
+</body>
+    <th:block layout:fragment="scripts">
+    </th:block>
+</html>

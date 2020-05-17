@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org" 
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+        layout:decorate="~{layouts/default}">
+    <head>
+        <title>Book Share</title>
+        <style type="text/css">
+            #myCarousel .list-inline {
+                white-space:nowrap;
+                overflow-x:auto;
+            }
+
+            #myCarousel .carousel-indicators {
+                position: static;
+                left: initial;
+                width: initial;
+                margin-left: initial;
+            }
+
+            #myCarousel .carousel-indicators > li {
+                width: initial;
+                height: initial;
+                text-indent: initial;
+            }
+
+            #myCarousel .carousel-indicators > li.active img {
+                /*opacity: 0.7;*/
+            }
+        </style>
+    </head>
+    <body>
+        <th:block layout:fragment="header" th:include="layouts/header :: headerFragment">
+        </th:block>
+        <div layout:fragment="content" class="container" style="margin-top:100px">
+            <div id="">
+                <a class="text-decoration-none" th:href="@{/}">Trang Chủ</a>
+                <span>&gt;</span>
+                <a class="text-decoration-none" href="" th:text="${book.getType().get(0).typeName}"></a>
+                <span>&gt;</span>
+                <a class="text-decoration-none" href="" th:text="${book.bookName}"></a>
+                <hr>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="container ">
+                        <div class="row">
+                            <div class="d-inline-flex" id="slider">
+                                <div id="myCarousel" class="carousel slide shadow">
+                                    <!-- main slider carousel items -->
+                                    <div class="carousel-inner">
+                                        <div class="active carousel-item" data-slide-number="0" >
+                                            <img th:src="@{/public/} + ${book.thumbnailUrl}" class="img-fluid" style="width: 100%; height: 300px;">
+                                        </div>
+                                        <div th:each="bookImage, iter : ${book.bookImages}" class="carousel-item" th:attr="data-slide-number=${iter.index + 1}">
+                                            <img th:src="@{/public/} + ${bookImage.imageURL}" class="img-fluid" style="width: 100%; height: 300px;">
+                                        </div>
+                                        <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="sr-only">Previous</span>
+                                        </a>
+                                        <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="sr-only">Next</span>
+                                        </a>
+
+                                    </div>
+                                    <!-- main slider carousel nav controls -->
+                                    <ul class="carousel-indicators list-inline mx-auto border px-2">
+                                        <li class="list-inline-item active">      
+                                            <a id="carousel-selector-0" class="selected d-flex" data-slide-to="0" data-target="#myCarousel" style="width: 70px; height: 100px;">
+                                                <img th:src="@{/public/} + ${book.thumbnailUrl}" class="img-fluid">
+                                            </a>
+                                        </li>
+                                        <li th:each="bookImage, iter : ${book.bookImages}" class="list-inline-item">      
+                                            <a id="carousel-selector-0" class="selected d-flex" th:attr="data-slide-to=${iter.index + 1}" data-target="#myCarousel" style="width: 70px; height: 100px;">
+                                                <img th:src="@{/public/} + ${bookImage.imageURL}" class="img-fluid" >
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <h2 th:text="${book.bookName}"></h2>
+                    <hr>
+                    <div>
+                        <label>Thể loại:</label>
+                        <a class="text-decoration-none" href="" th:text="${book.getType().get(0).typeName}"></a>
+                    </div>
+                    <div>
+                        <label>Tác giả:</label>
+                        <span th:text="${book.author}"></span>
+                    </div>
+                    <div>
+                        <label>Ngày đăng:</label>
+                        <span th:text="${#dates.format(book.postDate, 'dd-MM-yyyy')}"></span>
+                    </div>
+                    <div>
+                        <label>Lượt xem:</label>
+                        <span th:text="${book.bookView}"></span>
+                    </div>
+                    <hr>
+                    <div>
+                        <h2>Mô tả</h2>
+                        <p th:text="${book.book_descripton}"></p>
+                    </div>
+                    <hr>
+                    <h2>Link tải sách</h2>
+                    <div th:each="bookDowloadLink : ${book.bookDowloadLinks}" class="container border bg-light">
+                        <label>Link:</label>
+                            <a class="text-wrap" href="" th:text="${bookDowloadLink.link}"></a>
+                        <hr>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="container">
+                <h3>Sách cùng thể loại</h3>
+                <div class="container border bg-light">
+                    <div class="d-flex flex-row mb-3 flex-wrap justify-content-star">
+                        <div class="p-2">
+                            <div class="card" style="width:190px; height: 100%">
+                                <a id="animationLink" href="">
+                                    <div class="container mt-4">
+                                        <img id="animationImage" class="card-img-bottom img-fluid" src="" alt="Card image" style="width:100%; height: 100%">
+                                    </div>
+                                    <div class="card-body">
+                                        <span></span>
+                                    </div>
+                                 </a>
+                            </div>                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <th:block layout:fragment="scripts">
+    </th:block>
+</html>

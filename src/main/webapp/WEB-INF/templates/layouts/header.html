@@ -1,0 +1,66 @@
+<div th:fragment="headerFragment">
+    <div class="bg-dark fixed-top" >
+        <div class="container">
+            <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+                <a class="navbar-brand" th:href="@{/}">Chia Sẻ Sách</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                    <form class="form-inline" action="/book/search" autocomplete="off">
+                        <div class="dropdown">
+                            <div id="searchBar" class="dropdown">
+                                <input autocomplete="off" oninput="showSearchSuggestionDropdown(this.value)" id="nav-search-bar" class="form-control mr-sm-2" type="text" placeholder="Tìm sách theo tên" name="searchKey">
+                                <button class="btn btn-success" onclick="search()">
+                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                </button>
+                                <div id='myDropdown' class='dropdown-menu'>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                                Thể Loại
+                            </a>
+                            <div class="dropdown-menu">
+                            </div>
+                        </li>            
+                    </ul>
+                    <ul class="navbar-nav">
+                        <div th:if="${user != null}" class="dropdown nav-item no-arrow">
+                            <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="true" href="#">
+                                <span class="mr-2 text-gray-600 small" th:text="${user.userName}"></span>
+                                <img th:if="${user.avatarUrl.contains('http')}" class="rounded-circle img-profile" th:src="${user.avatarUrl}" style="height: 40px; width: 40px">
+                                <img class="rounded-circle img-profile" th:src="@{/public/} + ${user.avatarUrl}" style="height: 40px; width: 40px">
+                            </a>
+                            <div class="dropdown-menu shadow dropdown-menu-right animated--grow-in">
+                                <a class="dropdown-item" th:href="@{/user/account/profile}">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    &nbsp;Thông tin
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" onclick="event.preventDefault();
+                                             document.getElementById('logout-form').submit();">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Đăng xuất
+                                </a>
+                                <form id="logout-form" th:action="@{/logout}" method="POST" style="display: none;">
+                                </form>
+                            </div>
+                        </div>
+                        <li th:if="${user == null}" class="nav-item">
+                            <a class="nav-link" th:href="@{/login}">Đăng Nhập</a>
+                        </li>
+                        <li th:if="${user == null}" class="nav-item">
+                            <a class="nav-link" th:href="@{/register}">Đăng Ký</a>
+                        </li>
+                    </ul>       
+                </div> 
+            </nav>
+        </div>
+    </div>
+</div>

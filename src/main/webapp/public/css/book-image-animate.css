@@ -1,0 +1,14 @@
+#animationImage {
+    transition: transform;
+    transition-duration: 0.5s;
+}
+
+#animationLink {
+	text-decoration: none;
+}
+
+
+#animationLink:hover img{
+  transform:translate(0px, -10px);
+}
+

@@ -1,0 +1,55 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:th="http://www.thymeleaf.org"
+		xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+		
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<style>
+			label.error {
+				color: red;
+			}
+			
+			input.error {
+				background-color: #ffcccc;
+			}
+		</style>
+		<title>Login Page</title>
+	</head>
+	<body onload='document.f.username.focus();'>
+		<!-- <h1>Register</h1> -->
+		
+		<h1>Login with Username and Password</h1>
+
+		<h2 th:if="${loginError != null}" th:text="${loginError.getMessage()}"></h2>
+		
+		<form name='f' method="POST" th:action="@{/login}">
+			<table>
+				<tr>
+					<td>User:</td>
+					<td>
+						<input type='text' name='username' value=''>
+					</td>
+				</tr>
+				<tr>
+					<td>Password:</td>
+					<td>
+						<input type='password' name='password'/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input id="remember_me" name="remember-me" type="checkbox"/>
+						<label for="remember_me" class="inline">Remember me</label>
+					</td>
+				</tr>
+				<tr>
+					<td colspan='2'>
+						<input name="submit" type="submit" value="Login"/>
+						<input name="submit" type="button" onclick="loadDoc()" value="Login"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</body>
+</html>
